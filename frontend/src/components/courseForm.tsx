@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Input, FormLabel, VStack, Text, useToast } from '@chakra-ui/react';
-import { saveCourse, fetchCourseById } from '../utils/api';
+import { saveCourse, fetchCourses } from '../utils/api';
 
 interface CourseFormProps {
   courseId?: number; // Optional prop for editing
@@ -18,7 +18,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ courseId }) => {
     if (courseId) {
       const loadCourse = async () => {
         try {
-          const course = await fetchCourseById(courseId);
+          const course = await fetchCourses();
           setTitle(course.title);
           setDescription(course.description);
           setStartDate(course.startDate);

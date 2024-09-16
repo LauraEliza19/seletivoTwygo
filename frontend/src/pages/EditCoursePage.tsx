@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Heading, useToast } from '@chakra-ui/react';
 import CourseForm from '../components/courseForm';
-import { fetchCourseById } from '../utils/api';
+import { fetchCourses } from '../utils/api';
 
 const EditCoursePage: React.FC = () => {
   const { courseId } = useParams<{ courseId?: string }>(); // `courseId` pode ser `undefined`
@@ -13,7 +13,7 @@ const EditCoursePage: React.FC = () => {
     if (courseId) {
       const loadCourse = async () => {
         try {
-          const course = await fetchCourseById(parseInt(courseId, 10));
+          const course = await fetchCourses();
           setId(course.id);
         } catch (err) {
           toast({
