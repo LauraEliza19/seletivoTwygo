@@ -2,25 +2,18 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
-// Inicializar o aplicativo Express
 const app = express();
 const PORT = 3000;
 
-// Configuração do middleware
+// Middleware CORS para permitir requisições do frontend
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost', // Alterar se necessário para o domínio do frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'Accept',
-    'X-Requested-With',
-    'X-CSRF-Token',
-    'Access-Control-Allow-Headers'
-  ],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(bodyParser.json({ limit: '400mb' }));
-app.use(bodyParser.urlencoded({ limit: '400mb', extended: true }));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Interface para Curso
 interface Course {
@@ -31,36 +24,35 @@ interface Course {
   endDate: string;
 }
 
-// Dados de exemplo
+// Exemplo de armazenamento em memória
 let courses: Course[] = [];
 
 // Rota para criar um novo curso
 app.post('/api/courses', (req, res) => {
-  try {
-    console.log('Dados recebidos:', req.body);  
-    const { title, description, startDate, endDate }: Course = req.body;
+  const { title, description, startDate, endDate } = req.body;
 
-    if (!title || !description || !startDate || !endDate) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    const newCourse: Course = { id: courses.length + 1, title, description, startDate, endDate };
-    courses.push(newCourse);
-    res.status(201).json(newCourse);
-  } catch (error) {
-    console.error('Erro ao salvar o curso:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+  if (!title || !description || !startDate || !endDate) {
+    return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
   }
+
+  const newCourse: Course = {
+    id: courses.length + 1,
+    title,
+    description,
+    startDate,
+    endDate,
+  };
+  
+  courses.push(newCourse);
+  res.status(201).json(newCourse);
 });
 
-// Rota para obter todos os cursos ativos
+// Rota para listar todos os cursos
 app.get('/api/courses', (req, res) => {
-  const now = new Date().toISOString();
-  const activeCourses = courses.filter(course => course.endDate >= now);
-  res.status(200).json(activeCourses);
+  res.json(courses);
 });
 
 // Iniciar o servidor
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Backend rodando na porta ${PORT}`);
 });

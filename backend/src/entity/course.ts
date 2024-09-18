@@ -4,17 +4,17 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity()
 export class Course {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  title: string;
+  title!: string;
 
   @Column()
-  description: string;
+  description!: string;
 
   @Column()
-  startDate: string;
+  startDate!: string;
 
   @Column()
-  endDate: string;
+  endDate!: string;
 }
