@@ -112,7 +112,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ courseId }) => {
                     isLoading={loading}
                     onClick={handleSubmit}
                 >
-                    Save Course
+                    salvar
                 </Button>
             </VStack>
         </Box>

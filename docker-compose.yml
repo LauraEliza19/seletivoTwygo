@@ -21,7 +21,7 @@ services:
     build: ./frontend
     container_name: frontend
     ports:
-      - "80:80"
+      - "3001:3000"
     volumes:
       - ./frontend:/app
     depends_on:

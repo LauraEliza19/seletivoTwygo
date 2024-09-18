@@ -1,20 +1,19 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import courseRoutes from './routes/courseRoutes';
 
 const app = express();
-const PORT = 3000;
 
-// Middleware CORS para permitir requisições do frontend
-app.use(cors({
-  origin: 'http://localhost', // Alterar se necessário para o domínio do frontend
+// Corrigir o valor de origin para 'http://localhost:3002'
+const corsOptions = {
+  origin: 'http://localhost:3002', // frontend rodando na porta 3002
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  credentials: true,
+};
 
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 // Interface para Curso
 interface Course {
   id?: number;
@@ -52,7 +51,11 @@ app.get('/api/courses', (req, res) => {
   res.json(courses);
 });
 
-// Iniciar o servidor
+// Rotas
+app.use('/api/courses', courseRoutes);
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Backend rodando na porta ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
+

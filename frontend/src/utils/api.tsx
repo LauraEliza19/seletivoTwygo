@@ -1,7 +1,7 @@
 //frontend\src\utils\api.tsx
 import { Course } from '../types';
 
-const API_BASE_URL = 'http://backend:3000/api'; // 'backend' é o nome do serviço no docker-compose
+const API_BASE_URL = 'http://backend:3001/api'; // 'backend' é o nome do serviço no docker-compose
 
 // Função para buscar todos os cursos
 export const fetchCourses = async () => {
