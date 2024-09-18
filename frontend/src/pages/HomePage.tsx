@@ -1,3 +1,4 @@
+//frontend\src\pages\HomePage.tsx
 import React from 'react';
 import { Container, Heading } from '@chakra-ui/react';
 import CourseList from '../components/courseList';

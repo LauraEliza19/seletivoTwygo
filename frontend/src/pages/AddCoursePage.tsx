@@ -1,3 +1,4 @@
+//frontend\src\pages\AddCoursePage.tsx
 import React from 'react';
 import { Container, Heading } from '@chakra-ui/react';
 import CourseForm from '../components/courseForm';

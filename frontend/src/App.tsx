@@ -1,3 +1,4 @@
+//frontend\src\App.tsx
 import React from 'react';
 import { Box } from '@chakra-ui/react';
 import Navbar from './components/navBar'; // Verifique se o caminho está correto

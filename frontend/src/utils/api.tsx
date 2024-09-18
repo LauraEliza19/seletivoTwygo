@@ -1,3 +1,4 @@
+//frontend\src\utils\api.tsx
 // import { Course } from '../types';
 
 const API_BASE_URL = 'http://localhost:3000/api';
@@ -8,8 +9,7 @@ export const fetchCourses = async () => {
         const response = await fetch(`${API_BASE_URL}/courses`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                "Clear-Site-Data": "*"
+                'Content-Type': 'application/json'
             },
         });
 
@@ -30,8 +30,7 @@ export const fetchCourseById = async (id: number) => {
         const response = await fetch(`${API_BASE_URL}/courses/${id}`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                "Clear-Site-Data": "*"
+                'Content-Type': 'application/json'
             },
         });
 
@@ -51,8 +50,7 @@ export const saveCourse = async (course: { title: string; description: string; s
     const response = await fetch(`${API_BASE_URL}/courses`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            "Clear-Site-Data": "*"
+            'Content-Type': 'application/json'
             // Não adicione cabeçalhos desnecessários
         },
         body: JSON.stringify(course),

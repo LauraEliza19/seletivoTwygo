@@ -1,3 +1,4 @@
+//frontend\src\components\courseList.tsx
 import React, { useEffect, useState } from 'react';
 import { Box, Text, Button, VStack, Spinner } from '@chakra-ui/react';
 import { fetchCourses } from '../utils/api';

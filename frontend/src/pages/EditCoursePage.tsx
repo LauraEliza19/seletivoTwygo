@@ -1,3 +1,4 @@
+//frontend\src\pages\EditCoursePage.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Heading, useToast } from '@chakra-ui/react';
@@ -11,6 +12,17 @@ const EditCoursePage: React.FC = () => {
     const toast = useToast();
 
     useEffect(() => {
+        if (!courseId) {
+            toast({
+              title: "Error",
+              description: "Course ID is missing",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+            });
+            return;
+        }
+          
         if (courseId) {
             const loadCourse = async () => {
                 try {

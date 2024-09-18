@@ -1,3 +1,4 @@
+//backend\src\data-source.ts
 import { DataSource } from "typeorm";
 import { Course } from "./entity/course";
 

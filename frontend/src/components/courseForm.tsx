@@ -1,3 +1,4 @@
+//frontend\src\components\courseForm.tsx
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Input, FormLabel, VStack, useToast } from '@chakra-ui/react';
 import { saveCourse, fetchCourseById } from '../utils/api';
@@ -36,6 +37,16 @@ const CourseForm: React.FC<CourseFormProps> = ({ courseId }) => {
 
             loadCourse();
         }
+        if (!title || !description || !startDate || !endDate) {
+            toast({
+              title: "Validation error",
+              description: "All fields are required",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+            });
+            return;
+          }          
     }, [courseId, toast]);
 
     const handleSubmit = async () => {
