@@ -1,10 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
-import Navbar from './components/navBar';
-import HomePage from './pages/HomePage';
+import Navbar from './components/navBar'; // Verifique se o caminho está correto
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AddCoursePage from './pages/AddCoursePage';
 import EditCoursePage from './pages/EditCoursePage';
+import HomePage from './pages/HomePage'; // Corrija o caminho se necessário
 
 const App: React.FC = () => {
   return (
@@ -13,9 +13,9 @@ const App: React.FC = () => {
         <Navbar />
         <Box flex="1" p={4}>
           <Routes>
-            <Route path="/" element={<HomePage />} />
             <Route path="/add-course" element={<AddCoursePage />} />
-            <Route path="/edit-course/:courseId" element={<EditCoursePage />} />
+            <Route path="/edit/:courseId" element={<EditCoursePage />} />
+            <Route path="/" element={<HomePage />} /> {/* Certifique-se de que a página HomePage está correta */}
           </Routes>
         </Box>
       </Box>

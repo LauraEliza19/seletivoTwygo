@@ -6,8 +6,13 @@ const app = express();
 const PORT = 3000;
 
 // Middleware
-app.use(cors()); // Permite solicitações de diferentes origens
-app.use(bodyParser.json({ limit: '10mb' })); // Ajuste o limite do corpo da solicitação se necessário
+app.use(cors({
+  origin: 'http://localhost:3000/add-course', // Substitua pela URL do seu frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+})); // Permite solicitações de diferentes origens
+app.use(bodyParser.json({ limit: '400mb' }));
+app.use(bodyParser.urlencoded({ limit: '400mb', extended: true }));
 
 // Interface para Curso
 interface Course {
@@ -23,6 +28,7 @@ let courses: Course[] = [];
 
 // Rota para criar um novo curso
 app.post('/api/courses', (req: Request, res: Response) => {
+  console.log('Dados recebidos:', req.body);  
   const { title, description, startDate, endDate }: Course = req.body;
 
   if (!title || !description || !startDate || !endDate) {

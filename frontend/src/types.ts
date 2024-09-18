@@ -1,7 +1,9 @@
+// frontend/src/types.ts
 export interface Course {
-    id?: number;
+    id: number;
     title: string;
     description: string;
-    startDate: string;
-    endDate: string;
+    startDate: string;  // Ou `Date` se preferir
+    endDate: string;    // Ou `Date`
   }
+  

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Input, FormLabel, VStack, Text, useToast } from '@chakra-ui/react';
-import { saveCourse, fetchCourses } from '../utils/api';
+import { Box, Button, Input, FormLabel, VStack, useToast } from '@chakra-ui/react';
+import { saveCourse, fetchCourseById } from '../utils/api';
 
 interface CourseFormProps {
   courseId?: number; // Optional prop for editing
@@ -18,7 +18,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ courseId }) => {
     if (courseId) {
       const loadCourse = async () => {
         try {
-          const course = await fetchCourses();
+          const course = await fetchCourseById(courseId);
           setTitle(course.title);
           setDescription(course.description);
           setStartDate(course.startDate);
@@ -50,6 +50,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ courseId }) => {
         isClosable: true,
       });
     } catch (err) {
+      console.error('Save course error:', err);
       toast({
         title: "Error",
         description: "Failed to save course.",
@@ -61,6 +62,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ courseId }) => {
       setLoading(false);
     }
   };
+  
 
   return (
     <Box p={4} shadow="md" borderWidth="1px">
