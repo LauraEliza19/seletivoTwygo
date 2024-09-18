@@ -1,9 +1,8 @@
-//backend\src\tsconfig.json
 {
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "commonjs",
+    "module": "ESNext",
     "target": "ES2020",
     "esModuleInterop": true,
     "skipLibCheck": true,
