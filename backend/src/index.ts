@@ -9,7 +9,14 @@ const PORT = 3000;
 app.use(cors({
   origin: 'http://localhost:3000/add-course', // Substitua pela URL do seu frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'Accept',
+    'X-Requested-With',
+    'X-CSRF-Token',
+    'Access-Control-Allow-Headers'
+  ],
 })); // Permite solicitações de diferentes origens
 app.use(bodyParser.json({ limit: '400mb' }));
 app.use(bodyParser.urlencoded({ limit: '400mb', extended: true }));
