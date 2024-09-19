@@ -4,5 +4,14 @@
     "gulp": "^5.0.0",
     "gulp-clean": "^0.4.0",
     "gulp-typescript": "^6.0.0-alpha.1"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/react": "^1.8.9",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "framer-motion": "^6.5.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }
