@@ -10,7 +10,7 @@ const app = (0, express_1.default)();
 const PORT = 3000;
 // Middleware CORS para permitir requisições do frontend
 app.use((0, cors_1.default)({
-    origin: 'http://http://localhost:3001/', // Alterar se necessário para o domínio do frontend
+    origin: 'http://localhost:3001/', // Alterar se necessário para o domínio do frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));

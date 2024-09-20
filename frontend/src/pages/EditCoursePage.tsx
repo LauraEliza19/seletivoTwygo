@@ -14,7 +14,7 @@ const EditCoursePage: React.FC = () => {
 
   useEffect(() => {
     if (courseId) {
-      fetch(`http://backend:3000/api/courses/${courseId}`)
+      fetch(`${process.env.REACT_APP_API_URL}/api/courses/${courseId}`)
         .then((response) => response.json())
         .then((data) => {
           setCourse(data);
@@ -26,11 +26,11 @@ const EditCoursePage: React.FC = () => {
         .catch((error) => console.error('Error fetching course:', error));
     }
   }, [courseId]);
-
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    fetch(`http://backend:3000/api/courses/${courseId}`, {
+  
+    fetch(`${process.env.REACT_APP_API_URL}/api/courses/${courseId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, description, startDate, endDate }),
@@ -59,6 +59,7 @@ const EditCoursePage: React.FC = () => {
         });
       });
   };
+  
 
   if (!course) return <div>Loading...</div>;
 

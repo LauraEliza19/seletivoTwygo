@@ -31,7 +31,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/courses');
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/courses`);
         if (!response.ok) {
           throw new Error('Erro ao carregar cursos');
         }
@@ -55,7 +55,7 @@ const HomePage: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/courses/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/courses/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {
@@ -79,6 +79,7 @@ const HomePage: React.FC = () => {
       });
     }
   };
+  
 
   if (loading) {
     return (

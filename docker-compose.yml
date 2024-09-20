@@ -12,18 +12,22 @@ services:
     environment:
       NODE_ENV: development
       DATABASE_URL: postgres://user:password@db:5432/mydatabase
+      # CORS config para aceitar requisições do frontend
+      CORS_ORIGIN: http://localhost:3001
     depends_on:
       - db
     networks:
       - app-network
 
-  frontend:
+    frontend:
     build: ./frontend
     container_name: frontend
     ports:
-      - "3001:3000"
+      - "3001:80"  # O frontend será servido pela porta 80 do nginx mapeada para 3001
     volumes:
       - ./frontend:/app
+    environment:
+      - REACT_APP_API_URL=http://localhost:3000  # URL de comunicação com o backend
     depends_on:
       - backend
     networks:
@@ -41,11 +45,9 @@ services:
     networks:
       - app-network
 
-# Definir a rede comum para os três serviços
 networks:
   app-network:
     driver: bridge
 
-# Definir os volumes necessários
 volumes:
   db_data:

@@ -13,6 +13,10 @@ RUN npm install
 # Copia o restante do código do frontend
 COPY . .
 
+# Define as variáveis de ambiente para o build do React
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=${REACT_APP_API_URL}
+
 # Builda o projeto
 RUN npm run build
 
