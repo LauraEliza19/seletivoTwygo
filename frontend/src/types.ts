@@ -5,5 +5,6 @@ export interface Course {
     description: string;
     startDate: string;  // Ou `Date` se preferir
     endDate: string;    // Ou `Date`
+    videos: string[];
   }
   

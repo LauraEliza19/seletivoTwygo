@@ -1,49 +1,60 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, FormControl, FormLabel, Input, useToast, Textarea  } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Input, useToast } from '@chakra-ui/react';
 
 const AddCoursePage: React.FC = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [videos, setVideos] = useState<FileList | null>(null);
   const toast = useToast();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const course = { title, description, startDate, endDate };
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('startDate', startDate);
+    formData.append('endDate', endDate);
+
+    if (videos) {
+      for (let i = 0; i < videos.length; i++) {
+        formData.append('videos', videos[i]);
+      }
+    }
 
     try {
-      const response = await fetch(`http://localhost:3000/api/courses`, {
+      const response = await fetch('http://localhost:3000/api/courses', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(course),
+        body: formData,
       });
 
       if (response.ok) {
         toast({
-          title: 'Course added successfully!',
+          title: 'Curso adicionado com sucesso!',
           status: 'success',
           duration: 3000,
           isClosable: true,
         });
         navigate('/');
       } else {
-        throw new Error('Failed to add course');
+        throw new Error('Falha ao adicionar curso');
       }
     } catch (error) {
       toast({
-        title: 'Error adding course',
+        title: 'Erro ao adicionar curso',
         description: error.message,
         status: 'error',
         duration: 5000,
         isClosable: true,
       });
-      navigate('/error'); // Redireciona para a página de erro
+      navigate('/error');
     }
   };
 
@@ -51,27 +62,32 @@ const AddCoursePage: React.FC = () => {
     <Box maxW="500px" mx="auto" mt={5}>
       <form onSubmit={handleSubmit}>
         <FormControl id="title" isRequired>
-          <FormLabel>Title</FormLabel>
+          <FormLabel>Título</FormLabel>
           <Input value={title} onChange={(e) => setTitle(e.target.value)} />
         </FormControl>
 
         <FormControl id="description" mt={4} isRequired>
-          <FormLabel>Description</FormLabel>
-          <Textarea  value={description} onChange={(e) => setDescription(e.target.value)} />
+          <FormLabel>Descrição</FormLabel>
+          <Input value={description} onChange={(e) => setDescription(e.target.value)} />
         </FormControl>
 
         <FormControl id="startDate" mt={4} isRequired>
-          <FormLabel>Start Date</FormLabel>
+          <FormLabel>Data de Início</FormLabel>
           <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
         </FormControl>
 
         <FormControl id="endDate" mt={4} isRequired>
-          <FormLabel>End Date</FormLabel>
+          <FormLabel>Data de Término</FormLabel>
           <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
         </FormControl>
 
+        <FormControl id="videos" mt={4}>
+          <FormLabel>Upload de Vídeos</FormLabel>
+          <Input type="file" multiple onChange={(e) => setVideos(e.target.files)} />
+        </FormControl>
+
         <Button colorScheme="teal" mt={4} type="submit">
-          Save Course
+          Salvar Curso
         </Button>
       </form>
     </Box>

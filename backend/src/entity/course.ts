@@ -17,4 +17,7 @@ export class Course {
 
   @Column()
   endDate!: string;
+
+  @Column('simple-array', { nullable: true })
+  videos!: string[];  // Coluna que armazena as URLs dos vídeos
 }
