@@ -19,7 +19,7 @@ services:
     networks:
       - app-network
 
-    frontend:
+  frontend:
     build: ./frontend
     container_name: frontend
     ports:

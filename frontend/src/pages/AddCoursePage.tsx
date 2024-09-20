@@ -16,7 +16,7 @@ const AddCoursePage: React.FC = () => {
     const course = { title, description, startDate, endDate };
 
     try {
-      const response = await fetch('http://localhost:3000/api/courses', {
+      const response = await fetch(`http://localhost:3000/api/courses`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
