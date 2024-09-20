@@ -1,6 +1,6 @@
 //frontend\src\components\courseForm.tsx
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Input, FormLabel, VStack, useToast } from '@chakra-ui/react';
+import { Box, Button, Input, FormLabel, VStack, useToast, Textarea  } from '@chakra-ui/react';
 import { saveCourse, fetchCourseById } from '../utils/api';
 
 interface CourseFormProps {
@@ -87,7 +87,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ courseId }) => {
                     placeholder="Enter course title"
                 />
                 <FormLabel htmlFor="description">Description</FormLabel>
-                <Input
+                <Textarea 
                     id="description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}

@@ -104,13 +104,13 @@ const HomePage: React.FC = () => {
         <SimpleGrid columns={[1, 2, 3]} spacing={6}>
           {courses.map((course) => (
             <Box
-              key={course.id}
-              borderWidth="1px"
-              borderRadius="lg"
-              overflow="hidden"
-              p={6}
-              bg="white"
-              shadow="md"
+                key={course.id}
+                borderWidth="1px"
+                borderRadius="lg"
+                overflow="hidden"
+                p={6}
+                bg="white"
+                boxShadow="md"
             >
               <Heading size="md" mb={4}>
                 {course.title}

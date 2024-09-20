@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, FormControl, FormLabel, Input, useToast } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Input, useToast, Textarea  } from '@chakra-ui/react';
 
 const AddCoursePage: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -57,7 +57,7 @@ const AddCoursePage: React.FC = () => {
 
         <FormControl id="description" mt={4} isRequired>
           <FormLabel>Description</FormLabel>
-          <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+          <Textarea  value={description} onChange={(e) => setDescription(e.target.value)} />
         </FormControl>
 
         <FormControl id="startDate" mt={4} isRequired>
