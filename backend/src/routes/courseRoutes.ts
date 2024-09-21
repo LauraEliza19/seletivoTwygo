@@ -1,74 +1,36 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
 import { Course } from '../entity/course';
 import multer from 'multer';
 import path from 'path';
 
 const router = Router();
+const fs = require('fs');
 
-// Buscar todos os cursos
-router.get('/', async (req, res) => {
-  try {
-    const courses = await AppDataSource.getRepository(Course).find();
-    res.json(courses); // Retorna todos os cursos encontrados
-  } catch (err) {
-    console.error('Error fetching courses:', err);
-    res.status(500).json({ message: 'Error fetching courses' });
-  }
-});
-
-// Buscar um curso por ID
-router.get('/:id', async (req, res) => {
-  const id = parseInt(req.params.id, 10);
-  try {
-    const course = await AppDataSource.getRepository(Course).findOneBy({ id });
-    if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
-    }
-    res.json(course);
-  } catch (err) {
-    console.error('Error fetching course:', err);
-    res.status(500).json({ message: 'Error fetching course' });
-  }
-});
-
-// Criar um novo curso
-// router.post('/', async (req, res) => {
-//   const { title, description, startDate, endDate } = req.body;
-
-//   // Verificação de campos obrigatórios
-//   if (!title || !description || !startDate || !endDate) {
-//     return res.status(400).json({ message: 'All fields are required' });
-//   }
-
-//   const course = new Course();
-//   course.title = title;
-//   course.description = description;
-//   course.startDate = startDate;
-//   course.endDate = endDate;
-
-//   try {
-//     const result = await AppDataSource.getRepository(Course).save(course);
-//     res.status(201).json(result); // Retorna o curso criado
-//   } catch (err) {
-//     console.error('Error saving course:', err);
-//     res.status(500).json({ message: 'Error saving course' });
-//   }
-// });
-
+// Configuração do armazenamento do multer
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Define a pasta onde os arquivos serão salvos
+  destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
+    const courseId = req.body.courseId || 'default'; // Pega o ID do curso da requisição
+    const uploadPath = `uploads/courses/${courseId}/videos`; // Define a pasta onde os arquivos serão salvos
+
+    // Cria a pasta se ela não existir
+    fs.mkdirSync(uploadPath, { recursive: true });
+
+    cb(null, uploadPath); // Define o caminho de destino
   },
-  filename: (req, file, cb) => {
+  filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
     cb(null, Date.now() + path.extname(file.originalname)); // Define o nome do arquivo
   },
 });
 
-const upload = multer({ storage: storage });
+// Configurar o multer com limite de tamanho de arquivo
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 100 * 1024 * 1024 } // Limite de 100MB
+});
 
-// Criar um novo curso com upload de vídeo
-router.post('/', upload.array('videos', 5), async (req, res) => {
+// Rota para criação de cursos com upload de vídeos
+router.post('/api/courses', upload.array('videos'), async (req: Request, res: Response) => {
   const { title, description, startDate, endDate } = req.body;
 
   if (!title || !description || !startDate || !endDate) {
@@ -94,6 +56,5 @@ router.post('/', upload.array('videos', 5), async (req, res) => {
     res.status(500).json({ message: 'Erro ao salvar o curso' });
   }
 });
-
 
 export default router;

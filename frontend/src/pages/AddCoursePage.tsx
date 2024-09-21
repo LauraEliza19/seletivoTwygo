@@ -22,17 +22,19 @@ const AddCoursePage: React.FC = () => {
 
     if (videos) {
       for (let i = 0; i < videos.length; i++) {
-        formData.append('videos', videos[i]);
+        const file = videos[i];
+        if (file.size > 100 * 1024 * 1024) { // Limite de 100MB
+          alert("O arquivo é muito grande!");
+          return;
+        }
+        formData.append('videos', file); // Adiciona os arquivos ao formData
       }
     }
 
     try {
       const response = await fetch('http://localhost:3000/api/courses', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: formData,
+        body: formData, // Não inclua 'Content-Type', será definido automaticamente
       });
 
       if (response.ok) {
