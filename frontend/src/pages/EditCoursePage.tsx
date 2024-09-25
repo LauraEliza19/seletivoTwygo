@@ -14,7 +14,7 @@ const EditCoursePage: React.FC = () => {
 
   useEffect(() => {
     if (courseId) {
-      fetch(`${process.env.REACT_APP_API_URL}/api/courses/${courseId}`)
+      fetch(`http://localhost:3000/api/courses/${courseId}`)
         .then((response) => response.json())
         .then((data) => {
           setCourse(data);

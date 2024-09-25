@@ -3,58 +3,74 @@ import { AppDataSource } from '../data-source';
 import { Course } from '../entity/course';
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
 
 const router = Router();
-const fs = require('fs');
 
 // Configuração do armazenamento do multer
 const storage = multer.diskStorage({
   destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
-    const courseId = req.body.courseId || 'default'; // Pega o ID do curso da requisição
-    const uploadPath = `uploads/courses/${courseId}/videos`; // Define a pasta onde os arquivos serão salvos
-
-    // Cria a pasta se ela não existir
-    fs.mkdirSync(uploadPath, { recursive: true });
-
-    cb(null, uploadPath); // Define o caminho de destino
+    // const courseId = req.body.courseId || 'default'; // Verifique o campo 'courseId'
+    const uploadPath = path.join(__dirname, `../uploads/courses/videos`); // Ajustando o caminho
+    
+    // Verifica se a pasta existe antes de criar
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    
+    cb(null, uploadPath);
   },
   filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Define o nome do arquivo
+    cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
-// Configurar o multer com limite de tamanho de arquivo
+// Configurar o multer
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 100 * 1024 * 1024 } // Limite de 100MB
-});
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB por arquivo
+}).array('videos', 5); // Limite de 5 vídeos por upload
 
-// Rota para criação de cursos com upload de vídeos
-router.post('/api/courses', upload.array('videos'), async (req: Request, res: Response) => {
+// Rota de criação de curso com upload de vídeos
+// Rota de criação de curso com upload de vídeos
+router.post('/api/courses', async (req: Request, res: Response) => {
+  // console.log('Corpo da requisição recebido no backend:', req.body);
+
+  
+  // Prosseguir com o upload
+  upload(req, res, async function (err: any) {
+    if (err) {
+      console.error('Erro no upload de arquivo:', err);
+      return res.status(500).json({ message: 'Erro no upload de arquivo' });
+    }
+    
+    const course = new Course();
+    course.title = title;
+    course.description = description;
+    course.startDate = startDate;
+    course.endDate = endDate;
+    
+    if (req.files) {
+      const videos = (req.files as Express.Multer.File[]).map(file => file.path);
+      course.videos = videos;
+    }
+
+    try {
+      const result = await AppDataSource.getRepository(Course).save(course);
+      res.status(201).json(result);
+    } catch (err) {
+      console.error('Erro ao salvar o curso:', err);
+      res.status(500).json({ message: 'Erro ao salvar o curso' });
+    }
+  });
+  
   const { title, description, startDate, endDate } = req.body;
 
   if (!title || !description || !startDate || !endDate) {
+    console.error('Campos faltando:', { title, description, startDate, endDate });
     return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
   }
-
-  const course = new Course();
-  course.title = title;
-  course.description = description;
-  course.startDate = startDate;
-  course.endDate = endDate;
-
-  if (req.files) {
-    const videos = (req.files as Express.Multer.File[]).map(file => file.path);
-    course.videos = videos; // Supondo que você tenha uma coluna 'videos' no banco de dados
-  }
-
-  try {
-    const result = await AppDataSource.getRepository(Course).save(course);
-    res.status(201).json(result); // Retorna o curso criado
-  } catch (err) {
-    console.error('Erro ao salvar o curso:', err);
-    res.status(500).json({ message: 'Erro ao salvar o curso' });
-  }
 });
+
 
 export default router;

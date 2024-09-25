@@ -1,4 +1,3 @@
-//frontend\src\utils\api.tsx
 import { Course } from '../types';
 
 const API_BASE_URL = 'http://backend:3001/api'; // 'backend' é o nome do serviço no docker-compose
@@ -25,14 +24,11 @@ export const fetchCourses = async () => {
 };
 
 // Função para salvar um novo curso
-export const saveCourse = async (course: { title: string; description: string; startDate: string; endDate: string }) => {
+export const saveCourse = async (formData: FormData) => { // Aceitando FormData
     try {
-        const response = await fetch(`${API_BASE_URL}/courses`, {
+        const response = await fetch(`${API_BASE_URL}/courses`, { // URL corrigida
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(course),
+            body: formData // Usar formData diretamente
         });
 
         if (!response.ok) {
@@ -57,16 +53,12 @@ export const fetchCourseById = async (id: number) => {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch course');
+            throw new Error('Falha ao buscar curso');
         }
 
         return await response.json();
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Erro:', error);
         throw error;
     }
 };
-
-// Função para salvar um novo curso
-
-
