@@ -33,23 +33,27 @@ const upload = multer({
 
 // Rota de criação de curso com upload de vídeos
 // Rota de criação de curso com upload de vídeos
-router.post('/api/courses', async (req: Request, res: Response) => {
-  // console.log('Corpo da requisição recebido no backend:', req.body);
-
-  
+router.post('/api/courses', (req: Request, res: Response) => {
   // Prosseguir com o upload
   upload(req, res, async function (err: any) {
     if (err) {
       console.error('Erro no upload de arquivo:', err);
       return res.status(500).json({ message: 'Erro no upload de arquivo' });
     }
-    
+
+    const { title, description, startDate, endDate } = req.body;
+
+    if (!title || !description || !startDate || !endDate) {
+      console.error('Campos faltando:', { title, description, startDate, endDate });
+      return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
+    }
+
     const course = new Course();
     course.title = title;
     course.description = description;
     course.startDate = startDate;
     course.endDate = endDate;
-    
+
     if (req.files) {
       const videos = (req.files as Express.Multer.File[]).map(file => file.path);
       course.videos = videos;
@@ -63,13 +67,6 @@ router.post('/api/courses', async (req: Request, res: Response) => {
       res.status(500).json({ message: 'Erro ao salvar o curso' });
     }
   });
-  
-  const { title, description, startDate, endDate } = req.body;
-
-  if (!title || !description || !startDate || !endDate) {
-    console.error('Campos faltando:', { title, description, startDate, endDate });
-    return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
-  }
 });
 
 

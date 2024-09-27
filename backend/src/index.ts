@@ -1,44 +1,61 @@
-import { Router, Request, Response } from 'express';
+import express from 'express';
+import cors from 'cors';
+import router from './routes/courseRoutes'; // Supondo que suas rotas estejam em 'router.ts'
 import { AppDataSource } from './data-source';
-import { Course } from './entity/course';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { Course } from './entity/course';
 
-const router = Router();
+// Inicializar a aplicação Express
+const app = express();
 
-// Configuração do armazenamento do multer
+// Inicializar a conexão com o banco de dados via TypeORM
+AppDataSource.initialize()
+  .then(() => {
+    console.log('Banco de dados conectado com sucesso!');
+  })
+  .catch((error) => console.error('Erro ao conectar com o banco de dados:', error));
+
+// Middleware para habilitar CORS
+app.use(cors());
+
+// Middleware para interpretar requisições JSON
+app.use(express.json());
+
+// Middleware para interpretar requisições URL-encoded
+app.use(express.urlencoded({ extended: true }));
+
+// Configuração do Multer
 const storage = multer.diskStorage({
-  destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
+  destination: (req, file, cb) => {
     const uploadPath = path.join(__dirname, '../uploads/courses/videos');
-
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
-
     cb(null, uploadPath);
   },
-  filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
+  filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
-  },
+  }
 });
 
-// Configurar o multer
 const upload = multer({
   storage: storage,
   limits: { fileSize: 100 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const filetypes = /mp4|mov|avi/; // Tipos de vídeo permitidos
+    const filetypes = /mp4|mov|avi/;
     const mimetype = filetypes.test(file.mimetype);
     if (mimetype) {
-      return cb(null, true);
+      cb(null, true);
+    } else {
+      cb(new Error('Tipo de arquivo não permitido'));
     }
-    cb(new Error('Tipo de arquivo não permitido'));
-  },
-}).array('videos', 5);
+  }
+});
 
-// Rota de criação de curso com upload de vídeos
-router.post('api/courses', upload, async (req: Request, res: Response) => {
+// Rota para upload de vídeos com o Multer
+app.post('/api/courses', upload.array('videos', 5), async (req, res) => {
   console.log('Corpo da requisição recebido no backend:', req.body);
 
   const { title, description, startDate, endDate } = req.body;
@@ -48,6 +65,7 @@ router.post('api/courses', upload, async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
   }
 
+  // Supondo que você tenha a entidade Course configurada corretamente
   const course = new Course();
   course.title = title;
   course.description = description;
@@ -68,4 +86,8 @@ router.post('api/courses', upload, async (req: Request, res: Response) => {
   }
 });
 
-export default router;
+// Iniciar o servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
